@@ -13,7 +13,7 @@
 *     - bronze.erp_loc_a101         : ERP customer location data
 *     - bronze.erp_px_cat_g1v2      : ERP product category hierarchy
 *
-* Author      : <Your Name>
+* Author      : Mateo2215
 * Created On  : 2026-01-07
 *
 * WARNING:

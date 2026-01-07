@@ -18,7 +18,7 @@
 *         loc_a101.csv         -> bronze.erp_loc_a101
 *         px_cat_g1v2.csv      -> bronze.erp_px_cat_g1v2
 *
-* Author      : <Your Name>
+* Author      : Mateo2215
 * Created On  : 2026-01-07
 *
 * WARNING:

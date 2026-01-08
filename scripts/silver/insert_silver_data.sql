@@ -24,7 +24,7 @@ END AS cst_gndr,
 cst_create_date
 FROM (
 SELECT *,
-ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last
+ROW_NUMBER() OVER (PARTITION BY cst_id ORDER BY cst_create_date DESC) AS flag_last ---Checking if there is any duplicates in cst_id
 FROM bronze.crm_cust_info
 WHERE cst_id IS NOT NULL)t
 WHERE flag_last = 1
@@ -45,10 +45,10 @@ INSERT INTO silver.crm_prd_info(
 )
 SELECT 
 prd_id,
-REPLACE(SUBSTRING(prd_key,1,5),'-','_') AS cat_id,
-SUBSTRING(prd_key,7,LEN(prd_key)) AS prd_key,
+REPLACE(SUBSTRING(prd_key,1,5),'-','_') AS cat_id, --- Extract category ID
+SUBSTRING(prd_key,7,LEN(prd_key)) AS prd_key, --- Extract product key
 prd_nm,
-ISNULL(prd_cost,0) AS prd_cost,
+ISNULL(prd_cost,0) AS prd_cost, --- Checking if prd_cost is NULL (if yes, then 0)
 CASE 
 	WHEN UPPER(TRIM(prd_line)) = 'R' THEN 'Road'
 	WHEN UPPER(TRIM(prd_line)) = 'M' THEN 'Mountain'
@@ -57,5 +57,5 @@ CASE
 	ELSE 'n/a' 
 	END AS prd_line,
 CAST(prd_start_dt AS DATE) as prd_start_dt,
-CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_start_dt ORDER BY prd_start_dt) - 1 AS DATE) AS prd_end_date
+CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) - 1 AS DATE) AS prd_end_date --- End date based on start date ( -1 day)
 FROM bronze.crm_prd_info;

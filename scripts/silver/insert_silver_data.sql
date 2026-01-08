@@ -1,33 +1,39 @@
 /****************************************************************************************
 * Script Name : Load_Silver_Tables_From_Bronze.sql
 * Description :
-*   Script loads data from the BRONZE layer into the SILVER layer.
-*   Applies data cleansing, standardization, deduplication
-*   and basic business rules during transformation.
+*   Script performs a FULL REFRESH load of the SILVER layer tables
+*   using data from the BRONZE layer.
+*
+*   Loading strategy:
+*     - TRUNCATE target SILVER tables
+*     - INSERT transformed and cleansed data from BRONZE
+*
+*   Transformations include:
+*     - Data cleansing and standardization
+*     - Deduplication (where applicable)
+*     - Business rule application
+*     - Data type normalization
 *
 *   Source Layer : BRONZE
 *   Target Layer : SILVER
 *
 * WARNING:
-*   This script performs INSERT operations into SILVER tables.
-*   Ensure target tables are empty or prepared before execution.
+*   This script TRUNCATES all listed SILVER tables before inserting data.
+*   All existing data in the SILVER layer will be permanently removed.
 *
-* Author      : <Your Name>
+* Execution Notes:
+*   - Intended to be executed as part of a batch / procedure
+*   - PRINT statements provide basic runtime logging
+*
+* Author      : Mateo2215
 * Created On  : 2026-01-07
 *
 ****************************************************************************************/
 
 
-/* ================================================================================
-   TARGET TABLE: silver.crm_cust_info
-   Description :
-     - Customer master data from CRM
-     - Deduplication based on cst_id
-     - Normalization of marital status and gender
-   Source Table:
-     - bronze.crm_cust_info
-================================================================================ */
-
+PRINT '>> Truncating Table: silver.crm_cust_info';
+TRUNCATE TABLE silver.crm_cust_info;
+PRINT '>> Inserting Data Into: silver.crm_cust_info';
 INSERT INTO silver.crm_cust_info(
     cst_id,
     cst_key,
@@ -75,6 +81,9 @@ WHERE flag_last = 1;
      - bronze.crm_prd_info
 ================================================================================ */
 
+PRINT '>> Truncating Table: silver.crm_prd_info';
+TRUNCATE TABLE silver.crm_prd_info;
+PRINT '>> Inserting Data Into: silver.crm_prd_info';
 INSERT INTO silver.crm_prd_info(
     prd_id,
     cat_id,
@@ -117,6 +126,11 @@ FROM bronze.crm_prd_info;
      - bronze.crm_sales_details
 ================================================================================ */
 
+
+
+PRINT '>> Truncating Table: silver.crm_sales_details';
+TRUNCATE TABLE silver.crm_sales_details;
+PRINT '>> Inserting Data Into: silver.crm_sales_details';
 INSERT INTO silver.crm_sales_details(
     sls_ord_num,
     sls_prd_key,
@@ -172,6 +186,10 @@ FROM bronze.crm_sales_details;
      - bronze.erp_cust_az12
 ================================================================================ */
 
+
+PRINT '>> Truncating Table: silver.erp_cust_az12';
+TRUNCATE TABLE silver.erp_cust_az12;
+PRINT '>> Inserting Data Into: silver.erp_cust_az12';
 INSERT INTO silver.erp_cust_az12(
     cid,
     bdate,
@@ -206,6 +224,10 @@ FROM bronze.erp_cust_az12;
      - bronze.erp_loc_a101
 ================================================================================ */
 
+
+PRINT '>> Truncating Table: silver.erp_loc_a101';
+TRUNCATE TABLE silver.erp_loc_a101;
+PRINT '>> Inserting Data Into: silver.erp_loc_a101';
 INSERT INTO silver.erp_loc_a101(
     cid,
     cntry
@@ -231,6 +253,10 @@ FROM bronze.erp_loc_a101;
      - bronze.erp_px_cat_g1v2
 ================================================================================ */
 
+
+PRINT '>> Truncating Table: silver.erp_px_cat_g1v2';
+TRUNCATE TABLE silver.erp_px_cat_g1v2;
+PRINT '>> Inserting Data Into: silver.erp_px_cat_g1v2';
 INSERT INTO silver.erp_px_cat_g1v2(
     id,
     cat,
@@ -243,5 +269,4 @@ SELECT
     subcat,
     maintenance
 FROM bronze.erp_px_cat_g1v2;
-
 

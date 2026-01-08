@@ -115,7 +115,7 @@ INSERT INTO silver.erp_cust_az12(
 	gen
 )
 SELECT 
-CASE WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid,4,LEN(cid))
+CASE WHEN cid LIKE 'NAS%' THEN SUBSTRING(cid,4,LEN(cid)) ----- remove 'NAS' prefix is present
 	ELSE cid
 END AS cid,
 CASE WHEN bdate > GETDATE() THEN NULL
@@ -128,5 +128,5 @@ WHEN UPPER(TRIM(gen)) IS NULL THEN 'n/a'
 WHEN UPPER(TRIM(gen)) = 'Male' THEN 'Male'
 WHEN UPPER(TRIM(gen)) = 'Female' THEN 'Female'
 ELSE 'n/a'
-END AS gen
+END AS gen  ----- normalize gender values
 FROM bronze.erp_cust_az12;

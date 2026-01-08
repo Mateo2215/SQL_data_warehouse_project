@@ -31,3 +31,16 @@ WHERE sls_ship_dt < = 0
 OR LEN(sls_ship_dt) !=8
 OR sls_ship_dt > 20500101
 OR sls_ship_dt < 19000101
+
+
+
+
+---- Check for negative or 0 Sales, quantity, price + For incorrect price + for NULLs
+SELECT
+sls_sales,
+sls_quantity,
+sls_price
+FROM bronze.crm_sales_details
+WHERE sls_sales <= 0 OR sls_quantity <= 0 OR sls_price <= 0
+OR sls_sales * sls_quantity != sls_price
+OR sls_sales IS NULL OR  sls_quantity IS NULL OR sls_price IS NULL
